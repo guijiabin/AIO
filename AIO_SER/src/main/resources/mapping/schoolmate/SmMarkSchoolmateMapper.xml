@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mpri.aio.schoolmate.mapper.SmMarkSchoolmateMapper">
+
+  	<!-- 基础返回值定义 -->
+	<resultMap id="BaseResultMap" type="com.mpri.aio.schoolmate.model.SmMarkSchoolmate">
+			<result column="mark_id" jdbcType="VARCHAR" property="markId" />
+			<result column="sys_user_id" jdbcType="VARCHAR" property="sysUserId" />
+	</resultMap>
+	
+    <!-- 基础字段定义 -->
+	<sql id="Base_Column_List">
+    	mark_id, sys_user_id
+	</sql>
+
+	<!-- 查询条件定义 -->
+	<sql id="query_where">
+		<if test="entity!=null">
+			<if test="entity.markId != null and entity.markId!='' ">
+        		and mark_id=#{entity.markId}
+      		</if>	      	
+			<if test="entity.sysUserId != null and entity.sysUserId!='' ">
+        		and sys_user_id=#{entity.sysUserId}
+      		</if>	      	
+		</if>
+	</sql>
+	
+  	<!-- 根据id查询 -->
+  	<select id="get" parameterType="com.mpri.aio.schoolmate.model.SmMarkSchoolmate" resultMap="BaseResultMap">
+   	    select 
+    		<include refid="Base_Column_List" />
+    	from sm_mark_schoolmate
+    	where id = #{id,jdbcType=VARCHAR} and flag = #{FLAG_NORMAL}
+  	</select>
+ 
+ 	<!-- 分页查询 -->
+    <select id="loadByPage" parameterType="com.mpri.aio.schoolmate.model.SmMarkSchoolmate" resultMap="BaseResultMap" >
+    	select
+    		<include refid="Base_Column_List" />
+    	from sm_mark_schoolmate 
+    	<where>
+	  		<include refid="query_where"></include>
+    	</where>
+  	</select>
+
+  	<!-- 依照条件查询所有对象 -->
+  	<select id="loadAllListBy"  parameterType="com.mpri.aio.schoolmate.model.SmMarkSchoolmate" resultMap="BaseResultMap" >
+    	select
+    		<include refid="Base_Column_List" />
+    	from sm_mark_schoolmate 
+		<where>
+	  		<include refid="query_where"></include>
+    	</where>
+  	</select>
+
+	<!-- 删除对象 -->
+  	<update id="delete" parameterType="com.mpri.aio.schoolmate.model.SmMarkSchoolmate">
+    	update sm_mark_schoolmate set flag = #{FLAG_HOLD} where id = #{id,jdbcType=VARCHAR}
+  	</update>
+  	
+  	<!-- 插入数据 -->
+  	<insert id="insert" parameterType="com.mpri.aio.schoolmate.model.SmMarkSchoolmate">
+		insert into sm_mark_schoolmate
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+	   		<if test="markId != null">
+	    		mark_id,
+	  		</if>   			
+	   		<if test="sysUserId != null">
+	    		sys_user_id,
+	  		</if>   			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+	   		<if test="markId != null">
+	   			#{markId,jdbcType=VARCHAR},
+	  		</if>   			
+	   		<if test="sysUserId != null">
+	   			#{sysUserId,jdbcType=VARCHAR},
+	  		</if>   			
+		</trim>
+  	</insert>
+
+  	<!-- 更新数据 -->
+  	<update id="update" parameterType="com.mpri.aio.schoolmate.model.SmMarkSchoolmate">
+    	update sm_mark_schoolmate
+    	<set>
+			<if test="markId != null">
+	   			mark_id = #{markId,jdbcType=VARCHAR},
+	  		</if>  
+			<if test="sysUserId != null">
+	   			sys_user_id = #{sysUserId,jdbcType=VARCHAR},
+	  		</if>  
+    	</set>
+    	where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+</mapper>
